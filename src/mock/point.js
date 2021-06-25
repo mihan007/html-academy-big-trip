@@ -1,99 +1,96 @@
 import dayjs from 'dayjs';
-import { PointType } from '../const.js';
+import { PointType } from '../constants/pointType';
 import { getRandomInteger } from '../utils.js';
+import { PointPriceRange } from '../constants/priceRanges';
+import { generateOffer } from './offer';
+import { getPointTypeIconUrl } from '../constants/pointTypeIcons';
+import { generateDestination } from './destination';
+import { PointTypeNames } from '../constants/pointTypeNames';
+import { PointTypeOffers } from '../constants/pointTypeOffers';
 
-const generateType = () => {
+const generatePointType = () => {
   const pointTypes = Object.entries(PointType);
   const randomIndex = getRandomInteger(0, pointTypes.length - 1);
 
-  return pointTypes[randomIndex];
+  return pointTypes[randomIndex][1];
 };
 
-const generateDate = () => {
-  // Когда в руках молоток, любая проблема - гвоздь.
-  // Вот и для генерации случайного булевого значения
-  // можно использовать "функцию из интернета".
-  // Ноль - ложь, один - истина. Для верности приводим
-  // к булевому типу с помощью Boolean
-  const isDate = Boolean(getRandomInteger(0, 1));
-
-  if (!isDate) {
-    return null;
+function generateOffers (pointType) {
+  if (!PointTypeOffers[pointType].length) {
+    return [];
   }
 
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const offersCount = getRandomInteger(0, 5);
 
-  return dayjs().add(daysGap, 'day').toDate();
-};
-
-const generateRepeating = () => {
-  return {
-    mo: false,
-    tu: false,
-    we: Boolean(getRandomInteger(0, 1)),
-    th: false,
-    fr: Boolean(getRandomInteger(0, 1)),
-    sa: false,
-    su: false,
+  const uniqueArrayByProperty = (array) => {
+    return array.reduce((prev, item) => {
+      const v = item.title;
+      if (!prev.used.includes(v)) {
+        prev.used.push(v);
+        prev.result.push(item);
+      }
+      return prev;
+    }, {
+      used: [],
+      result: [],
+    });
   };
-};
 
-function generateOffers () {
+  const offers = new Array(offersCount).fill().map(() => generateOffer(pointType));
+  if (offers.length > 1) {
+    return uniqueArrayByProperty(offers).result;
+  }
 
+  return offers;
 }
 
-function generateDestination () {
-
-}
-
-function generateDateRange (type) {
-  const typeDurationLimitInMinutes = {};
-  typeDurationLimitInMinutes[PointType.BUS]= [10, 180];
-  typeDurationLimitInMinutes[PointType.TAXI]= [20, 180];
-  typeDurationLimitInMinutes[PointType.TRAIN]= [30, 240];
-  typeDurationLimitInMinutes[PointType.SHIP]= [60, 480];
-  typeDurationLimitInMinutes[PointType.TRANSPORT]= [10, 80];
-  typeDurationLimitInMinutes[PointType.DRIVE]= [60, 480];
-  typeDurationLimitInMinutes[PointType.FLIGHT]= [90, 720];
-  typeDurationLimitInMinutes[PointType.CHECK_IN]= [5, 10];
-  typeDurationLimitInMinutes[PointType.SIGHTSEEING]= [5, 240];
-  typeDurationLimitInMinutes[PointType.RESTAURANT]= [60, 180];
-
+function generateDateRange (startDate, type) {
+  const typeDurationLimitInMinutes = {
+    [PointType.BUS]: [10, 180],
+    [PointType.TAXI]: [20, 180],
+    [PointType.TRAIN]: [30, 240],
+    [PointType.SHIP]: [60, 480],
+    [PointType.TRANSPORT]: [10, 80],
+    [PointType.DRIVE]: [60, 480],
+    [PointType.FLIGHT]: [90, 720],
+    [PointType.CHECK_IN]: [5, 10],
+    [PointType.SIGHTSEEING]: [5, 240],
+    [PointType.RESTAURANT]: [60, 180],
+  };
   const duration = getRandomInteger(typeDurationLimitInMinutes[type][0], typeDurationLimitInMinutes[type][1]);
 
-  return dayjs().add(duration, 'day').toDate();
+  return dayjs(startDate).add(duration, 'minute').toDate();
 }
 
-function generateCost () {
-
+function generatePrice () {
+  return getRandomInteger(PointPriceRange.min, PointPriceRange.max);
 }
 
-export const generateTask = () => {
-  const dueDate = generateDate();
-  const repeating = dueDate === null
-    ? generateRepeating()
-    : {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false,
-    };
+function generateIsFavorite () {
+  return Boolean(getRandomInteger(0, 1));
+}
 
-  const type = generateType();
-  let startDate, endDate;
-  [startDate, endDate] = generateDateRange(type);
+function generateStartDate () {
+  const startInDays = getRandomInteger(2, 40);
+
+  return dayjs().add(startInDays, 'day').toDate();
+}
+
+export const generatePoint = (startDate = null) => {
+  if (!startDate) {
+    startDate = generateStartDate();
+  }
+  const pointType = generatePointType();
+  const endDate = generateDateRange(startDate, pointType);
 
   return {
-    type,
-    offers: generateOffers(),
+    typeName: PointTypeNames[pointType],
+    typeIconUrl: getPointTypeIconUrl(pointType),
+    offers: generateOffers(pointType),
     destination: generateDestination(),
-    startDate: startDate,
-    endDate: endDate,
-    isFavorite: Boolean(getRandomInteger(0, 1)),
-    cost: generateCost(),
+    startDate,
+    endDate,
+    isFavorite: generateIsFavorite(),
+    price: generatePrice(),
   };
 };
