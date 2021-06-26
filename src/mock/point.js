@@ -22,7 +22,7 @@ function generateOffers (pointType) {
 
   const offersCount = getRandomInteger(0, 5);
 
-  const uniqueArrayByProperty = (array) => {
+  const uniqueArrayByTitle = (array) => {
     return array.reduce((prev, item) => {
       const v = item.title;
       if (!prev.used.includes(v)) {
@@ -38,7 +38,7 @@ function generateOffers (pointType) {
 
   const offers = new Array(offersCount).fill().map(() => generateOffer(pointType));
   if (offers.length > 1) {
-    return uniqueArrayByProperty(offers).result;
+    return uniqueArrayByTitle(offers).result;
   }
 
   return offers;
