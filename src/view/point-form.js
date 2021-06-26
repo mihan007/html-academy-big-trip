@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { DateTimeFormat } from '../constants/dateTimeFormat';
 import { getPointTypeIconUrl } from '../constants/pointTypeIcons';
 import { PointTypeNames } from '../constants/pointTypeNames';
-import { Destinations } from '../constants/cities';
+import { Destinations } from '../constants/destinations';
 import { PointTypeOffers } from '../constants/pointTypeOffers';
 import { getRandomInteger } from '../utils';
 import { OfferPriceRange } from '../constants/priceRanges';
