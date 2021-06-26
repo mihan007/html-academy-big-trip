@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils';
-import { Destinations } from '../constants/cities';
+import { Destinations } from '../constants/destinations';
 
 function generateTitle () {
   const randomIndex = getRandomInteger(0, Destinations.length - 1);
