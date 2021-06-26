@@ -84,6 +84,7 @@ export const generatePoint = (startDate = null) => {
   const endDate = generateDateRange(startDate, pointType);
 
   return {
+    type: pointType,
     typeName: PointTypeNames[pointType],
     typeIconUrl: getPointTypeIconUrl(pointType),
     offers: generateOffers(pointType),

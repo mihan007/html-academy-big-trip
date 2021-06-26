@@ -1,6 +1,6 @@
 import { PointType } from './pointType';
 
-const PointTypeOffers = {
+const PointTypeIcons = {
   [PointType.BUS]: 'bus.png',
   [PointType.TAXI]: 'taxi.png',
   [PointType.TRAIN]: 'train.png',
@@ -14,5 +14,5 @@ const PointTypeOffers = {
 };
 
 export function getPointTypeIconUrl(pointType) {
-  return 'img/icons/' + PointTypeOffers[pointType];
+  return 'img/icons/' + PointTypeIcons[pointType];
 }

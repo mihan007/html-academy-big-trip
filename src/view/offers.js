@@ -2,16 +2,18 @@ export const createOffersTemplate = (offers) => {
   if (!offers.length) {
     return '';
   }
-  let result = '<h4 class="visually-hidden">Offers:</h4><ul class="event__selected-offers">';
+  const result = ['<h4 class="visually-hidden">Offers:</h4><ul class="event__selected-offers">'];
   for (const offer of offers) {
-    result += `
+    result.push(`
     <li class="event__offer">
     <nobr>
         <span class="event__offer-title">${offer.title}</nobr></span>
         +€&nbsp;<span class="event__offer-price">${offer.price}</span>
     </nobr>
-    </li>`;
+    </li>`,
+    );
   }
+  result.push('</ul>');
 
-  return result + '</ul>';
+  return result.join('');
 };
