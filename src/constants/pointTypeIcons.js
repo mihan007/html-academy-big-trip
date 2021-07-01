@@ -13,6 +13,9 @@ const PointTypeIcons = {
   [PointType.RESTAURANT]: 'restaurant.png',
 };
 
-export function getPointTypeIconUrl(pointType) {
-  return 'img/icons/' + PointTypeIcons[pointType];
-}
+export const getPointTypeIconUrl = (pointType) => {
+  if (PointTypeIcons[pointType]) {
+    return 'img/icons/' + PointTypeIcons[pointType];
+  }
+  return 'img/icons/sightseeing.png';
+};

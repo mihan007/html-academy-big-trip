@@ -15,7 +15,7 @@ const generatePointType = () => {
   return pointTypes[randomIndex][1];
 };
 
-function generateOffers (pointType) {
+const generateOffers = (pointType) => {
   if (!PointTypeOffers[pointType].length) {
     return [];
   }
@@ -42,9 +42,9 @@ function generateOffers (pointType) {
   }
 
   return offers;
-}
+};
 
-function generateDateRange (startDate, type) {
+const generateDateRange = (startDate, type) => {
   const typeDurationLimitInMinutes = {
     [PointType.BUS]: [10, 180],
     [PointType.TAXI]: [20, 180],
@@ -60,21 +60,17 @@ function generateDateRange (startDate, type) {
   const duration = getRandomInteger(typeDurationLimitInMinutes[type][0], typeDurationLimitInMinutes[type][1]);
 
   return dayjs(startDate).add(duration, 'minute').toDate();
-}
+};
 
-function generatePrice () {
-  return getRandomInteger(PointPriceRange.min, PointPriceRange.max);
-}
+const generatePrice = () => getRandomInteger(PointPriceRange.min, PointPriceRange.max);
 
-function generateIsFavorite () {
-  return Boolean(getRandomInteger(0, 1));
-}
+const generateIsFavorite = () => Boolean(getRandomInteger(0, 1));
 
-function generateStartDate () {
+const generateStartDate = () => {
   const startInDays = getRandomInteger(2, 40);
 
   return dayjs().add(startInDays, 'day').toDate();
-}
+};
 
 export const generatePoint = (startDate = null) => {
   if (!startDate) {
