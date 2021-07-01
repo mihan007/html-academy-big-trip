@@ -6,7 +6,6 @@ import { PointTypeNames } from '../constants/point-type-names';
 import { Destinations } from '../constants/destinations';
 import { PointTypeOffers } from '../constants/point-type-offers';
 import { getRandomInteger } from '../utils';
-import { OfferPriceRange } from '../constants/offer';
 
 const createPointTypeEditTemplate = (currentType) => {
   return Object.entries(PointType).map((pointType) => {

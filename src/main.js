@@ -22,7 +22,7 @@ const contentElement = document.querySelector('.js-content');
 render(contentElement, createPointFormTemplate(points[0]));
 render(contentElement, createPointFormTemplate());
 
-range(1, POINT_COUNT).map((value, index) => createPointListTemplate(points[index]));
+points.map((el, index) => render(contentElement, createPointListTemplate(points[index])));
 
 const tripElement = document.querySelector('.js-trip');
 render(tripElement, createInfoTemplate(points));

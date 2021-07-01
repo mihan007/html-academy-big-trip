@@ -25,11 +25,12 @@ const generateOffers = (pointType) => {
   }
 
   const offers = new Set();
-  const totalOffersCount = Math.min(PointTypeOffers[pointType].length - 1, 5);
+  const totalOffersCount = Math.min(PointTypeOffers[pointType].length, 5);
   const offersCount = getRandomInteger(0, totalOffersCount);
-  range(0, offersCount).map((pointType) => offers.add(generateOffer(pointType)));
 
-  return offers.entries();
+  range(0, offersCount).map(() => offers.add(generateOffer(pointType)));
+
+  return Array.from(offers);
 };
 
 const generateDateRange = (startDate, type) => {
@@ -46,7 +47,7 @@ const generateRandomDate = () => {
   const daysBefore = getRandomInteger(-20, 0);
   const daysAfter = getRandomInteger(-20, 0);
 
-  return dayjs().between(dayjs.recent(daysBefore), dayjs.soon(daysAfter)).toDate();
+  return dayjs.between(dayjs.recent(daysBefore), dayjs.soon(daysAfter)).toDate();
 };
 
 export const generatePoint = () => {

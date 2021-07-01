@@ -3,7 +3,7 @@ import { PointType } from './point-type';
 export const pointTypeDurations = {
   [PointType.BUS]: [10, 180],
   [PointType.TAXI]: [20, 180],
-  [PointType.TRAIN]: [30, 240],
+  [PointType.TRAIN]: [60, 3000],
   [PointType.SHIP]: [60, 480],
   [PointType.TRANSPORT]: [10, 80],
   [PointType.DRIVE]: [60, 480],
