@@ -5,6 +5,7 @@ export const DateTimeFormat = {
   infoFullDate: 'MMM DD',
   infoShortDate: 'DD',
   formDateTimeAttribute: 'DD/MM/YY HH:mm',
-  durationWithHours: 'HH[H] mm[M]',
-  durationWithoutHours: 'mm[M]',
+  durationLong: 'DD[D] HH[H] mm[M]',
+  durationMedium: 'HH[H] mm[M]',
+  durationShort: 'mm[M]',
 };

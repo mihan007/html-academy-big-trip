@@ -1,4 +1,4 @@
-import { PointType } from './pointType';
+import { PointType } from './point-type';
 
 const PointTypeIcons = {
   [PointType.BUS]: 'bus.png',

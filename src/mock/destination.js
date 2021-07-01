@@ -1,15 +1,10 @@
 import { getRandomArrayElement, getRandomInteger } from '../utils';
 import { Destinations } from '../constants/destinations';
-import { MockSentences } from '../constants/mockSentences';
+import { MockSentences } from '../constants/mock-sentences';
 
-const generateTitle = () => {
-  const randomIndex = getRandomInteger(0, Destinations.length - 1);
-  return Destinations[randomIndex];
-};
+const generateTitle = () => getRandomArrayElement(Destinations);
 
-const generateSentence = () => {
-  return getRandomArrayElement(MockSentences);
-};
+const generateSentence = () => getRandomArrayElement(MockSentences);
 
 const generateDescription = () => {
   const sentencesCount = getRandomInteger(1, 5);

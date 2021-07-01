@@ -1,19 +1,12 @@
-import { getRandomInteger } from '../utils.js';
-import { OfferPriceRange } from '../constants/priceRanges';
-import { PointTypeOffers } from '../constants/pointTypeOffers';
-
-const generateTitle = (pointType) => {
-  const randomIndex = getRandomInteger(0, PointTypeOffers[pointType].length - 1);
-
-  return PointTypeOffers[pointType][randomIndex];
-};
-
-const generatePrice = () => getRandomInteger(OfferPriceRange.min, OfferPriceRange.max);
+import { getRandomArrayElement } from '../utils.js';
+import { PointTypeOffers } from '../constants/point-type-offers';
 
 export const generateOffer = (pointType) => {
+  const pointOffer = getRandomArrayElement(PointTypeOffers[pointType]);
+
   return {
     pointType,
-    title: generateTitle(pointType),
-    price: generatePrice(),
+    title: pointOffer.title,
+    price: pointOffer.price,
   };
 };

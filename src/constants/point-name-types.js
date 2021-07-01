@@ -1,4 +1,4 @@
-import { PointType } from './pointType';
+import { PointType } from './point-type';
 
 export const PointNameTypes = {
   'Bus': PointType.BUS,

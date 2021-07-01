@@ -1,12 +1,12 @@
-import { PointType } from '../constants/pointType';
 import dayjs from 'dayjs';
-import { DateTimeFormat } from '../constants/dateTimeFormat';
-import { getPointTypeIconUrl } from '../constants/pointTypeIcons';
-import { PointTypeNames } from '../constants/pointTypeNames';
+import { PointType } from '../constants/point-type';
+import { DateTimeFormat } from '../constants/date-time-format';
+import { getPointTypeIconUrl } from '../constants/point-type-icons';
+import { PointTypeNames } from '../constants/point-type-names';
 import { Destinations } from '../constants/destinations';
-import { PointTypeOffers } from '../constants/pointTypeOffers';
+import { PointTypeOffers } from '../constants/point-type-offers';
 import { getRandomInteger } from '../utils';
-import { OfferPriceRange } from '../constants/priceRanges';
+import { OfferPriceRange } from '../constants/offer';
 
 const createPointTypeEditTemplate = (currentType) => {
   return Object.entries(PointType).map((pointType) => {
@@ -23,29 +23,14 @@ const createPointTypeEditTemplate = (currentType) => {
 
 const createDestinationListTemplate = (currentDestination) => {
   return Destinations.map((destinationName) => {
-    `<option value="Amsterdam" ${currentDestination && currentDestination.title === destinationName ? 'selected' : ''}></option>`;
+    `<option value="${destinationName}" ${currentDestination && currentDestination.title === destinationName ? 'selected' : ''}></option>`;
   }).join('');
 };
 
 const createEventAvailableOffers = (type, currentOffers) => {
-  const availableOffers = [];
-  for (const offerTitle of PointTypeOffers[type]) {
-    availableOffers.push({
-      title: offerTitle,
-      price: getRandomInteger(OfferPriceRange.min, OfferPriceRange.max),
-    });
-  }
-  return availableOffers.map((offer, ind) => {
-    const offerTitle = offer.title;
-    let offerPrice = offer.price;
-    let checked = false;
-    for (const currentOffer of currentOffers) {
-      if (currentOffer.title === offerTitle) {
-        offerPrice = currentOffer.price;
-        checked = true;
-        break;
-      }
-    }
+
+  return PointTypeOffers[type].map((offer, ind) => {
+    const checked = Boolean(currentOffers.find((el) => el.title === offer.title));
 
     return `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden"
@@ -55,9 +40,9 @@ const createEventAvailableOffers = (type, currentOffers) => {
             ${checked ? 'checked' : ''}
             >
         <label class="event__offer-label" for="event-offer-${ind}">
-          <span class="event__offer-title">${offerTitle}</span>
+          <span class="event__offer-title">${offer.title}</span>
           +€&nbsp;
-          <span class="event__offer-price">${offerPrice}</span>
+          <span class="event__offer-price">${offer.price}</span>
         </label>
       </div>`;
   }).join('');
@@ -100,8 +85,8 @@ export const createPointFormTemplate = (point = {}) => {
   const startDateTemplate = startDate ? dayjs(startDate).format(DateTimeFormat.formDateTimeAttribute) : '';
   const endDateTemplate = endDate ? dayjs(endDate).format(DateTimeFormat.formDateTimeAttribute) : '';
 
-  const pointTypeIconUrl = typeIconUrl ? typeIconUrl : getPointTypeIconUrl(type);
-  const pointTypeNameTemplate = typeName ? typeName : PointTypeNames[type];
+  const pointTypeIconUrl = typeIconUrl ?? getPointTypeIconUrl(type);
+  const pointTypeNameTemplate = typeName ?? PointTypeNames[type];
   const pointTypeTemplate = createPointTypeEditTemplate(type);
   const destinationsListTemplate = createDestinationListTemplate(destination);
 

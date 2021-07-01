@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { DateTimeFormat } from '../constants/dateTimeFormat';
+import { DateTimeFormat } from '../constants/date-time-format';
 
 export const createInfoTemplate = (points) => {
   const path = [];
@@ -11,21 +11,25 @@ export const createInfoTemplate = (points) => {
       lastAddedTitle = pointTitle;
     }
   }
-  const startDate = points ? dayjs(points[0].startDate) : '';
+
+  points.sort((a, b) => {
+    const dayDiff = b.startDate - a.startDate;
+    return dayDiff === 0 ? b.endDate - a.endDate : dayDiff;
+  });
+
+  const startDate = points.length ? dayjs(points[0].startDate) : '';
   const startDateTemplate = startDate ? startDate.format(DateTimeFormat.infoFullDate) : '';
 
-  const endDate = points ? dayjs(points[points.length - 1].endDate) : '';
+  const endDate = points.length ? dayjs(points[points.length - 1].endDate) : '';
   const endDateTemplate = endDate ? endDate.format(DateTimeFormat.infoFullDate) : '';
 
   let datesTemplate = `${startDateTemplate}&nbsp;&mdash;&nbsp;${endDateTemplate}`;
   if (!points) {
     datesTemplate = '';
-  } else if (startDate.month() === endDate.month()) {
-    if (startDate.day() === endDate.day()) {
-      datesTemplate = `${startDateTemplate}`;
-    } else {
-      datesTemplate = `${startDateTemplate}&nbsp;&mdash;&nbsp;${endDate.format(DateTimeFormat.infoShortDate)}`;
-    }
+  } else if (startDate.isSame(endDate, 'day')) {
+    datesTemplate = `${startDateTemplate}`;
+  } else {
+    datesTemplate = `${startDateTemplate}&nbsp;&mdash;&nbsp;${endDate.format(DateTimeFormat.infoShortDate)}`;
   }
 
   return path ? `<div class="trip-info__main">
@@ -33,3 +37,4 @@ export const createInfoTemplate = (points) => {
               <p class="trip-info__dates">${datesTemplate}</p>
         </div>` : '';
 };
+

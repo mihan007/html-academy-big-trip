@@ -1,63 +1,39 @@
 import dayjs from 'dayjs';
-import { PointType } from '../constants/pointType';
-import { getRandomInteger } from '../utils.js';
-import { PointPriceRange } from '../constants/priceRanges';
+import dayjsRandom from 'dayjs-random';
+import { PointType } from '../constants/point-type';
+import { getRandomInteger, range } from '../utils.js';
+import { PointPriceRange } from '../constants/price-ranges';
 import { generateOffer } from './offer';
-import { getPointTypeIconUrl } from '../constants/pointTypeIcons';
+import { getPointTypeIconUrl } from '../constants/point-type-icons';
 import { generateDestination } from './destination';
-import { PointTypeNames } from '../constants/pointTypeNames';
-import { PointTypeOffers } from '../constants/pointTypeOffers';
+import { PointTypeNames } from '../constants/point-type-names';
+import { PointTypeOffers } from '../constants/point-type-offers';
+import { pointTypeDurations } from '../constants/point-type-durations';
+
+dayjs.extend(dayjsRandom);
 
 const generatePointType = () => {
-  const pointTypes = Object.entries(PointType);
+  const pointTypes = Object.values(PointType);
   const randomIndex = getRandomInteger(0, pointTypes.length - 1);
 
-  return pointTypes[randomIndex][1];
+  return pointTypes[randomIndex];
 };
 
 const generateOffers = (pointType) => {
-  if (!PointTypeOffers[pointType].length) {
+  if (!PointTypeOffers[pointType]) {
     return [];
   }
 
-  const offersCount = getRandomInteger(0, 5);
+  const offers = new Set();
+  const totalOffersCount = Math.min(PointTypeOffers[pointType].length - 1, 5);
+  const offersCount = getRandomInteger(0, totalOffersCount);
+  range(0, offersCount).map((pointType) => offers.add(generateOffer(pointType)));
 
-  const uniqueArrayByTitle = (array) => {
-    return array.reduce((prev, item) => {
-      const v = item.title;
-      if (!prev.used.includes(v)) {
-        prev.used.push(v);
-        prev.result.push(item);
-      }
-      return prev;
-    }, {
-      used: [],
-      result: [],
-    });
-  };
-
-  const offers = new Array(offersCount).fill().map(() => generateOffer(pointType));
-  if (offers.length > 1) {
-    return uniqueArrayByTitle(offers).result;
-  }
-
-  return offers;
+  return offers.entries();
 };
 
 const generateDateRange = (startDate, type) => {
-  const typeDurationLimitInMinutes = {
-    [PointType.BUS]: [10, 180],
-    [PointType.TAXI]: [20, 180],
-    [PointType.TRAIN]: [30, 240],
-    [PointType.SHIP]: [60, 480],
-    [PointType.TRANSPORT]: [10, 80],
-    [PointType.DRIVE]: [60, 480],
-    [PointType.FLIGHT]: [90, 720],
-    [PointType.CHECK_IN]: [5, 10],
-    [PointType.SIGHTSEEING]: [5, 240],
-    [PointType.RESTAURANT]: [60, 180],
-  };
-  const duration = getRandomInteger(typeDurationLimitInMinutes[type][0], typeDurationLimitInMinutes[type][1]);
+  const duration = getRandomInteger(...pointTypeDurations[type]);
 
   return dayjs(startDate).add(duration, 'minute').toDate();
 };
@@ -66,17 +42,16 @@ const generatePrice = () => getRandomInteger(PointPriceRange.min, PointPriceRang
 
 const generateIsFavorite = () => Boolean(getRandomInteger(0, 1));
 
-const generateStartDate = () => {
-  const startInDays = getRandomInteger(2, 40);
+const generateRandomDate = () => {
+  const daysBefore = getRandomInteger(-20, 0);
+  const daysAfter = getRandomInteger(-20, 0);
 
-  return dayjs().add(startInDays, 'day').toDate();
+  return dayjs().between(dayjs.recent(daysBefore), dayjs.soon(daysAfter)).toDate();
 };
 
-export const generatePoint = (startDate = null) => {
-  if (!startDate) {
-    startDate = generateStartDate();
-  }
+export const generatePoint = () => {
   const pointType = generatePointType();
+  const startDate = generateRandomDate();
   const endDate = generateDateRange(startDate, pointType);
 
   return {

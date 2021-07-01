@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import durationPlugin from 'dayjs/plugin/duration';
-import { DateTimeFormat } from '../constants/dateTimeFormat';
+import { DateTimeFormat } from '../constants/date-time-format';
 import { createOffersTemplate } from './offers';
 
 dayjs.extend(durationPlugin);
@@ -15,9 +15,12 @@ export const createPointListTemplate = (point) => {
   const endDateTimeTemplate = dayjs(endDate).format(DateTimeFormat.pointListTime);
 
   const duration = dayjs.duration(dayjs(endDate).diff(dayjs(startDate)));
-  const durationTemplate = duration.hours() > 0
-    ? duration.format(DateTimeFormat.durationWithHours)
-    : duration.format(DateTimeFormat.durationWithoutHours);
+  let durationTemplate = duration.format(DateTimeFormat.durationShort);
+  if (duration.days() > 0) {
+    durationTemplate = duration.format(DateTimeFormat.durationLong);
+  } else if (duration.hours() > 0) {
+    durationTemplate = duration.format(DateTimeFormat.durationMedium);
+  }
 
   const offersListTemplate = createOffersTemplate(offers);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
