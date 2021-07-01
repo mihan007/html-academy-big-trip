@@ -4,13 +4,13 @@ import { DateTimeFormat } from '../constants/date-time-format';
 export const createInfoTemplate = (points) => {
   const path = [];
   let lastAddedTitle = '';
-  for (const point of points) {
+  points.map((point) => {
     const pointTitle = point.destination.title;
     if (pointTitle !== lastAddedTitle) {
       path.push(pointTitle);
       lastAddedTitle = pointTitle;
     }
-  }
+  });
 
   points.sort((a, b) => {
     const dayDiff = b.startDate - a.startDate;
