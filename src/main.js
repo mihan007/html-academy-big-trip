@@ -1,18 +1,18 @@
 import { createPointFormTemplate } from './view/point-form';
-import { createMenuTemplate } from './view/menu';
+import Menu, { createMenuTemplate } from './view/menu';
 import { createPointListTemplate } from './view/point-list';
 import { createCostTemplate } from './view/cost';
 import { createFilterTemplate } from './view/filter';
 import { createInfoTemplate } from './view/info';
 import { createSortTemplate } from './view/sort';
 import { generatePoint } from './mock/point';
-import { range, renderTemplate } from './utils';
+import { range, renderTemplate, renderElement } from './utils';
 
 const POINT_COUNT = 20;
 const points = range(1, POINT_COUNT).map(() => generatePoint());
 
 const menuElement = document.querySelector('.js-menu');
-renderTemplate(menuElement, createMenuTemplate());
+renderElement(menuElement, new Menu().getElement());
 
 const contentElement = document.querySelector('.js-content');
 renderTemplate(contentElement, createPointFormTemplate(points[0]));
